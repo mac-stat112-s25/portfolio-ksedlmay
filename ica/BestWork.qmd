@@ -1,0 +1,73 @@
+
+```{r}
+library(tidyverse)
+library(openintro)
+library(ggplot2)
+library(maps)
+library(mosaic)
+library(gplots)
+library(leaflet)
+
+starbucks <- read.csv("https://mac-stat.github.io/data/starbucks.csv")
+
+starbucks_us_by_state <- starbucks |>
+  filter(Country == "US") |>
+  count(State.Province) |>
+  mutate(state_name = str_to_lower(abbr2state(State.Province)))
+
+census_pop_est_2018 <- read_csv("https://mac-stat.github.io/data/us_census_2018_state_pop_est.csv") |>
+  separate(state, into = c("dot", "state"), extra = "merge") |>
+  select(-dot) |>
+  mutate(state = str_to_lower(state))
+
+starbucks_with_2018_pop_est <-
+  starbucks_us_by_state |>
+  left_join(census_pop_est_2018,
+    by = c("state_name" = "state")
+  ) |>
+  mutate(starbucks_per_10000 = (n / est_pop_2018) * 10000)
+
+```
+```{r}
+#Univariate Viz 
+ggplot(starbucks_us_by_state, aes(x = n)) +
+  geom_histogram(binwidth = 100, color = "white", fill = "black") +
+  labs(title = "How Many Starbucks Locations per State",
+       x = "Number of Starbucks",
+       y = "Number of States") 
+```
+
+```{r}
+#Bivariate Viz
+ggplot(starbucks_us_by_state, aes(x = state_name, y = n)) +
+  geom_col(fill = "Black") +
+  labs(title = "Number of Starbucks Locations in each State",
+       x = "States",
+       y = "Number of Locations") +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1))
+
+```
+
+```{r}
+#Multivariate Viz
+ggplot(starbucks, aes(x = Longitude, y = Latitude, color = Ownership.Type)) +
+  geom_point(alpha = 0.7) + 
+  labs(
+    title = "Starbucks Locations by Ownership Type",
+    x = "Longitude",
+    y = "Latitude",
+    color = "Ownership Type",)
+```
+
+```{r}
+#Spatial Viz
+
+states_map <- map_data("state")
+
+ggplot(starbucks_us_by_state, aes(map_id = state_name, fill = n)) +
+  geom_map(map = states_map) +
+  expand_limits(x = states_map$long, y = states_map$lat) +
+  theme_map()+
+  scale_fill_gradientn(name = "# of Starbucks in America", colors = c("blue", "purple", "red"), values = scales::rescale(seq(0, 10000, by = 100)))
+```
+

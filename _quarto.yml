@@ -4,7 +4,7 @@ project:
 
 book:
   title: "COMP/STAT112 Notebook"
-  author: "Your Name Here"
+  author: "Kellen Sedlmayer"
   date: today
   reader-mode: true
   page-navigation: true
@@ -25,11 +25,7 @@ book:
 
     - part: "Best Work"
       chapters: 
-      - bw/bw-uni.qmd
-      - bw/bw-bi.qmd
-      - bw/bw-tri.qmd
-      - bw/bw-quad.qmd
-      - bw/bw-spatial.qmd
+      - ica/BestWork.qmd
 
     - part: "In-class Activities"
       chapters: 
