@@ -26,6 +26,8 @@ book:
     - part: "Best Work"
       chapters: 
       - ica/BestWork.qmd
+      - ica/Test1.qmd
+      - ica/Test2.qmd
 
     - part: "In-class Activities"
       chapters: 
@@ -33,6 +35,12 @@ book:
       - ica/ica-bi.qmd
       - ica/ica-multi.qmd
       - ica/ica-spatial.qmd
+      - ica/Joining.qmd
+      - ica/Reshaping.qmd
+      - ica/Strings.qmd
+      - ica/Wrangling.qmd
+      - ica/Dates.qmd
+      - ica/Factors.qmd
 
 format:
   html:

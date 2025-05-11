@@ -1,0 +1,57 @@
+---
+title: "Test1"
+format: html
+---
+
+```{r}
+library(tidytuesdayR)
+library(tidyverse)
+
+tuesdata <- tt_load('2020-02-18')
+fc <- tuesdata$food_consumption
+
+```
+
+```{r}
+head(fc)
+```
+```{r}
+#| fig.height: 15
+#| fig.width: 15
+
+ggplot(fc, aes(x = consumption)) +
+  geom_histogram(binwidth = 5, fill = "blue", color = "white") +
+  facet_wrap(~ food_category) +
+  labs(title = "Food Consumption by Category",
+       x = "Consumption (kg per person per year)",
+       y = "Count") +
+  theme_minimal()
+
+
+```
+
+
+```{r}
+fc %>%
+  group_by(food_category) %>%
+  summarise(mean_consumption = mean(consumption, na.rm = TRUE)) %>%
+  ggplot(aes(x = reorder(food_category, mean_consumption), y = mean_consumption)) +
+  geom_col(fill = "blue") +
+  coord_flip() +
+  labs(title = "Average Food Consumption by Category",
+       x = "Food Category", 
+       y = "Mean Consumption (kg/person/year)") +
+  theme_minimal()
+```
+
+```{r}
+ggplot(fc, aes(x = food_category, y = consumption)) +
+  geom_boxplot(fill = "blue") +
+  labs(title = "Food Consumption by Category",
+       x = "Food Category", 
+       y = "Consumption (kg/person/year)") +
+  theme_minimal() +
+  coord_flip()
+```
+
+
