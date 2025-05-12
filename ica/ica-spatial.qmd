@@ -167,8 +167,6 @@ These spatial maps can be **static** or **dynamic/interactive**.
 
 ## Exercises
 
-{{< include activity-instructions.qmd >}}
-
 ### Preview
 
 You'll explore some R spatial viz tools below.

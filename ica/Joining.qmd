@@ -241,7 +241,6 @@ Filtering joins keep specific observations from the left table based on whether 
 
 ## Exercises
 
-{{< include activity-instructions.qmd >}}
 
 ### Exercise 1: Where are my keys? {.unnumbered}
 
@@ -367,15 +366,22 @@ Use the appropriate join for each prompt below. In each case, think before you t
 
 ```{r}
 # 1. We want contact info for people who HAVEN'T voted
-
+contact |> 
+  anti_join(voters, join_by(name == id))
 
 # 2. We want contact info for people who HAVE voted
-
+contact |> 
+  semi_join(voters, join_by(name == id))
 
 # 3. We want any data available on each person
+contact |> 
+  full_join(voters, join_by(name == id))
+voters |> 
+  full_join(contact, join_by(id == name))
 
-
-# 4. When possible, we want to add contact info to the voting roster
+# 4. We want to add contact info, when possible, to the voting roster
+voters |> 
+  left_join(contact, join_by(id == name))
 
 
 ```
@@ -417,10 +423,10 @@ Use R code to take a quick glance at the data.
 
 ```{r}
 # How many observations (rows) and variables (columns) are there in the grades data?
-
+dim(grades)
 
 # How many observations (rows) and variables (columns) are there in the courses data?
-
+dim(courses)
 
 ```
 
@@ -450,12 +456,12 @@ courses |>
 For our class size exploration, obtain the *total* enrollments in each `sessionID`, combining any cross-listed sections. Save this as `courses_combined`. NOTE: There's no joining to do here!
 
 ```{r}
-# courses_combined <- courses |> 
-#   ___(sessionID) |> 
-#   ___(enroll = sum(___))
+courses_combined <- courses |>
+  group_by(sessionID) |>
+  summarize(enroll = sum(enroll))
 
 # Check that this has 1695 rows and 2 columns
-# dim(courses_combined)
+dim(courses_combined)
 ```
 
 #### Part b {.unnumbered}
@@ -467,6 +473,8 @@ Let's first examine the question of class size from the *administration*'s viewp
 -   Do you have to do any joining? If so, which dataset will go on the left, i.e. which dataset includes your primary observations of interest? Which join function will you need?
 
 ```{r}
+courses_combined |> 
+  summarize(median(enroll))
 ```
 
 #### Part c {.unnumbered}

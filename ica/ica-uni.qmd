@@ -160,9 +160,7 @@ Unless the authors of a package add updates, you only need to do this once all s
 -   **If you're working with a desktop version of R/RStudio**\
     RStudiio --\> "Packages" pane --\> click "Install" --\> type the name of the package (`tidyverse`) and make sure the "Install dependencies" box is checked --\> and click "Install".
 
-## Exercises
-
-{{< include activity-instructions.qmd >}}
+## Exercise
 
 ```{r}
 #| eval: true

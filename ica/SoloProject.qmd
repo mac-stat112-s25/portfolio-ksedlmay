@@ -1,0 +1,63 @@
+---
+title: "SoloProject"
+format: html
+---
+```{r}
+library(tidyverse)
+covid_data <- read.csv("246e823b-4ce9-4258-a3cd-88aecd8744de.csv")
+head(covid_data)
+```
+
+```{r}
+library(ggplot2)
+library(viridis)
+library(tigris)
+library(sf)
+
+california_counties <- counties(state = "CA", cb = TRUE, class = "sf")
+
+```
+
+```{r}
+california_data <- left_join(california_counties, covid_data, by = c("NAME" = "area"))
+
+```
+
+
+```{r}
+ggplot(california_data) +
+  geom_sf(aes(fill = cumulative_deaths), color = "white") +  
+  scale_fill_viridis_c(option = "plasma", name = "COVID-19 Deaths") +
+  labs(title = "COVID-19 deaths by County in California", 
+       caption = "Data is from the cdc databases, 2019-current") +
+  theme_minimal()
+```
+
+#How I made it
+>I have made a chloropleth map visualization. This visualisation shows each county within california and color codes it according to how many cumulative deaths there were within that respective county. To make this chloropleth I first had to source data from the cdc and import it. Then I imported the tigris and sf packlages which allowed me to take data from a stored counties database. Then I joined the data and created a main dataset which merged the area and NAME columns. Then using the sf package I made the chloropleth map and colored it using viridis. 
+
+#Conclusions drawn
+>Based on the color scale gradient shown on the chloropleth map, we can make the conclusion that the more densely populated counties of california were correlated to the most deaths, this is shown by the brighter colors. For example, Los Angeles county which is by far the most populated in California, is also the brightest county on the map being a bright yellow which indicates a very large amount of deaths. In contrast we have Imperial county which is sparcely populated and correlates to a dull blue color which indicates fewer deaths. 
+
+>The main story of the data: More people in a county correlates to more covid deaths. As well as the less people in a county correlates to less covid deaths.
+
+```{r}
+library(dplyr)
+
+death_table <- california_data %>%
+  st_drop_geometry() %>%
+  group_by(NAME) %>%
+  summarise(cumulative_deaths = sum(deaths, na.rm = TRUE)) %>%
+  arrange(desc(cumulative_deaths))
+
+print(death_table)
+```
+
+
+
+
+
+
+
+
+

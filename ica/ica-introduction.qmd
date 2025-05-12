@@ -177,7 +177,6 @@ RStudio was started by 1991 Mac alum [Joseph J. Allaire](https://en.wikipedia.or
 
 ## Exercises
 
-{{< include activity-instructions.qmd >}}
 
 ### Exercise 1: RStudio {-}
 
@@ -265,7 +264,7 @@ We'll learn lots and lots of functions this semester. Nobody has every function 
 -   `rep()` = ???
 -   `seq()` = ???
 
-{{< include activity-check-with-partner.qmd >}}
+
 
 ### Exercise 5: Practice {-}
 
@@ -322,7 +321,7 @@ Finally, try to print `degrees_tomorrow`. Take time to read the **error message*
 degrees_tomorrow
 ```
 
-{{< include activity-check-with-partner.qmd >}}
+
 
 ### Exercise 7: Practice {-}
 

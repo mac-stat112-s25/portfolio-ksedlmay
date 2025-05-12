@@ -207,7 +207,6 @@ penguins |\> filter(species == "Chinstrap") |\> group_by(sex) |\> summarize(min 
 
 ## Exercises Part 1: Same Verbs, New Tricks
 
-{{< include activity-instructions.qmd >}}
 
 ### Exercise 1: More Filtering {.unnumbered}
 
@@ -539,6 +538,14 @@ penguins |>
 Calculate the total number of births in each month and year, eg, Jan 1969, Feb 1969, .... Label month by names not numbers, eg, Jan not 1. Then, plot the births by month and comment on what you learn.
 
 ```{r}
+births_monthly <- Birthdays |> 
+  mutate(month = month(date, label = TRUE, abbr = TRUE),
+         year = year(date)) |> 
+  group_by(year, month) |> 
+  summarise(total_births = sum(births), .groups = "drop")
+
+ggplot(births_monthly, aes(x = month, y = total_births, group = year)) +
+  geom_line(alpha = 0.5) 
 ```
 
 #### Part b {.unnumbered}
@@ -546,6 +553,14 @@ Calculate the total number of births in each month and year, eg, Jan 1969, Feb 1
 In 1988, calculate the total number of births per week in each state. Get rid of week "53", which isn't a complete week! Then, make a line plot of births by week for each state and comment on what you learn. For example, do you notice any seasonal trends? Are these the same in every state? Any outliers?
 
 ```{r}
+births_weekly <- Birthdays |> 
+  filter(year == 1988, week != 53) |> 
+  group_by(state, week) |> 
+  summarise(total_births = sum(births), .groups = "drop")
+
+ggplot(births_weekly, aes(x = week, y = total_births, color = state)) +
+  geom_line(show.legend = FALSE) +
+  facet_wrap(~state)
 ```
 
 #### Part c {.unnumbered}
@@ -553,6 +568,13 @@ In 1988, calculate the total number of births per week in each state. Get rid of
 Repeat the above for just Minnesota (MN) and Louisiana (LA). MN has one of the coldest climates and LA has one of the warmest. How do their seasonal trends compare? Do you think these trends are similar in other colder and warmer states? Try it!
 
 ```{r}
+births_mn_la <- Birthdays |> 
+  filter(year == 1988, week != 53, state %in% c("MN", "LA")) |> 
+  group_by(state, week) |> 
+  summarise(total_births = sum(births), .groups = "drop")
+
+ggplot(births_mn_la, aes(x = week, y = total_births, color = state)) +
+  geom_line()
 ```
 
 
@@ -564,12 +586,29 @@ Repeat the above for just Minnesota (MN) and Louisiana (LA). MN has one of the c
 Create a dataset with only births in Massachusetts (MA) in 1979 and sort the days from those with the most births to those with the fewest.
 
 ```{r}
+ma_births_1979 <- Birthdays |> 
+  filter(state == "MA", year == 1979) |> 
+  group_by(date) |> 
+  summarise(total_births = sum(births), .groups = "drop") |> 
+  arrange(desc(total_births))
+
+ma_births_1979
 ```
 
 #### Part b {.unnumbered}
 
 Make a table showing the five states with the most births between September 9, 1979 and September 12, 1979, including the 9th and 12th. Arrange the table in descending order of births.
 
+```{r}
+top_states <- Birthdays |> 
+  filter(date >= as.Date("1979-09-09") & date <= as.Date("1979-09-12")) |> 
+  group_by(state) |> 
+  summarise(total_births = sum(births), .groups = "drop") |> 
+  arrange(desc(total_births)) |> 
+  slice_head(n = 5)
+
+top_states
+```
 
 ## Solutions
 

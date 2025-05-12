@@ -239,7 +239,6 @@ Wrangle this data so that the 3 restaurant columns are combined into 1, hence th
 
 ## Exercises
 
-{{< include activity-instructions.qmd >}}
 
 ### Exercise 1: What's the problem? {.unnumbered}
 
@@ -257,6 +256,8 @@ head(sleep_wide)
 
 What are the units of observation in `sleep_wide`?
 
+>people
+
 #### Part b {.unnumbered}
 
 Suppose I ask you to plot each subject's reaction time (y-axis) vs the number of days of sleep restriction (x-axis). "Sketch" out in words what the first few rows of the data need to look like in order to do this. It might help to think about what you'd need to complete the plotting frame:
@@ -270,6 +271,7 @@ How can you obtain the dataset you sketched in part b?
 -   just using `sleep_wide`
 -   `pivot_longer()`
 -   `pivot_wider()`
+>pivot_longer()
 
 
 ### Exercise 2: Pivot longer {.unnumbered}
@@ -288,8 +290,11 @@ Use `pivot_longer()` to create the long-format dataset above. Show the first 3 l
 
 ```{r}
 # For cols, try 2 appproaches: using - and starts_with
-# ___ |> 
-#   pivot_longer(cols = ___, names_to = "___", values_to = "___")
+sleep_wide |>
+  pivot_longer(cols = -Subject, names_to = "day", values_to = "reaction_time")
+
+sleep_wide |>
+  pivot_longer(cols = starts_with("day"), names_to = "day", values_to = "reaction_time")
 ```
 
 #### Part b {.unnumbered}
@@ -316,6 +321,8 @@ Follow-up:
 Using `sleep_long`, construct a line plot of reaction time vs day for each subject. This will look goofy no matter what you do. Why? HINT: look back at `head(sleep_long)`. What class or type of variables are `Subject` and `day`? What do we *want* them to be?
 
 ```{r}
+ggplot(sleep_long, aes(y = reaction_time, x = day, color = Subject)) + 
+  geom_line()
 ```
 
 
@@ -343,13 +350,16 @@ head(sleep_long)
 ```{r}
 # Make a line plot of reaction time by day for each subject
 # Put these all on the same frame
-
+ggplot(sleep_long, aes(y = reaction_time, x = day, color = Subject)) + 
+  geom_line()
 ```
 
 ```{r}
 # Make a line plot of reaction time by day for each subject
 # Put these all on separate frames (one per subject)
-
+ggplot(sleep_long, aes(y = reaction_time, x = day, color = Subject)) + 
+  geom_line() + 
+  facet_wrap(~ Subject)
 ```
 
 #### Part b {.unnumbered}
@@ -359,7 +369,7 @@ Summarize what you learned from the plots. For example:
 -   What's the general relationship between reaction time and sleep?
 -   Is this the same for everybody? What differs?
 
-
+>Reaction time increases (worsens) with a lack of sleep. Some subjects seem to be more impacted than others by lack of sleep, and some tend to have faster/slower reaction times in general.
 
 ### Exercise 4: Pivot wider {.unnumbered}
 
@@ -370,9 +380,9 @@ Make the data *wide* again, with each day becoming its own column.
 Adjust the code below. What don't you like about the column labels?
 
 ```{r}
-# sleep_long |>
-#   pivot_wider(names_from = ___, values_from = ___) |> 
-#   head()
+sleep_long |>
+  pivot_wider(names_from = day, values_from = reaction_time) |>
+  head()
 ```
 
 #### Part b {.unnumbered}
@@ -380,9 +390,9 @@ Adjust the code below. What don't you like about the column labels?
 Using your intuition, adjust your code from part a to name the reaction time columns "day_0", "day_1", etc.
 
 ```{r}
-# sleep_long |>
-#   pivot_wider(names_from = ___, values_from = ___, names_prefix = "___") |> 
-#   head()
+sleep_long |>
+  pivot_wider(names_from = day, values_from = reaction_time, names_prefix = "day_") |>
+  head()
 ```
 
 
@@ -407,6 +417,9 @@ In using this data, you'll need to determine if and when the data needs to be re
 Construct and summarize a plot of how a song's Billboard ranking its 2nd week on the chart (y-axis) is related to its ranking the 1st week on the charts (x-axis). Add a reference line `geom_abline(intercept = 0, slope = 1)`. Songs *above* this line *improved* their rankings from the 1st to 2nd week.
 
 ```{r}
+ggplot(billboard, aes(y = wk2, x = wk1)) + 
+  geom_point() +
+  geom_abline(intercept = 0, slope = 1)
 ```
 
 #### Part b {.unnumbered}
@@ -414,6 +427,8 @@ Construct and summarize a plot of how a song's Billboard ranking its 2nd week on
 Use your wrangling tools to identify *which* songs are those above the line in Part a, i.e. with rankgings that went up from week 1 to week 2.
 
 ```{r}
+billboard |> 
+  filter(wk2 > wk1)
 ```
 
 #### Part c {.unnumbered}
@@ -425,11 +440,18 @@ Define a new dataset, `nov_1999`, which:
 
 ```{r}
 # Define nov_1999
+nov_1999 <- billboard |> 
+  filter(date.entered == "1999-11-06") |> 
+  select(-track, -date.entered)
+
+# Or
+nov_1999 <- billboard |> 
+  filter(date.entered == "1999-11-06") |> 
+  select(artist, starts_with("wk"))
 
 
 # Confirm that nov_1999 has 2 rows (songs) and 77 columns
-
-
+dim(nov_1999)
 ```
 
 #### Part d {.unnumbered}
@@ -437,6 +459,11 @@ Define a new dataset, `nov_1999`, which:
 Create and discuss a visualization of the rankings (y-axis) over time (x-axis) for the 2 songs in `nov_1999`. There are hints below (if you scroll), but you're encouraged to play around and use as few hints as possible.
 
 ```{r}
+nov_1999 |> 
+  pivot_longer(cols = -artist, names_to = "week", names_prefix = "wk", values_to = "ranking") |> 
+  mutate(week = as.numeric(week)) |> 
+  ggplot(aes(y = ranking, x = week, color = artist)) + 
+    geom_line()
 ```
 
 Hints:
@@ -463,6 +490,10 @@ In analyzing this data, you'll need to determine if and when the data needs to b
 Identify the 15 guests that appeared the most. (This isn't a very diverse guest list!)
 
 ```{r}
+daily |> 
+  count(raw_guest_list) |> 
+  arrange(desc(n)) |> 
+  head(15)
 ```
 
 #### Part b {.unnumbered}
@@ -476,6 +507,15 @@ CHALLENGE: Create the following data set containing 19 columns:
 There are hints below (if you scroll), but you're encouraged to play around and use as few hints as possible.
 
 ```{r}
+daily |> 
+  count(year, raw_guest_list) |> 
+  group_by(raw_guest_list) |> 
+  mutate(total = sum(n)) |>
+  pivot_wider(names_from = year, 
+              values_from = n,
+              values_fill = 0) |> 
+  arrange(desc(total)) |> 
+  head(15)
 ```
 
 HINTS: There are lots of ways to do this. You don't necessarily need all of these hints.
@@ -490,8 +530,12 @@ HINTS: There are lots of ways to do this. You don't necessarily need all of thes
 Let's recreate the first figure from [the article](https://fivethirtyeight.com/datalab/every-guest-jon-stewart-ever-had-on-the-daily-show/). This groups all guests into 3 broader occupational categories. However, our current data has 18 categories:
 
 ```{r}
-daily |> 
-  count(group)
+plot_data |>
+  group_by(year, broad_group) |>
+  summarise(n = n()) |>
+  mutate(freq = n / sum(n)) |> 
+  ggplot(aes(y = freq, x = year, color = broad_group)) + 
+    geom_line()
 ```
 
 Let's define a new dataset that includes a new variable, `broad_group`, that buckets these 18 categories into the 3 bigger ones used in the article. And get rid of any rows missing information on `broad_group`. You'll learn the code soon! For now, just run this chunk:

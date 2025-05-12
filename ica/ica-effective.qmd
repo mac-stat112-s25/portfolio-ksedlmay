@@ -23,7 +23,6 @@ For more information about the topics covered in this chapter, refer to the reso
 -   [Telling a story (Chp 29, html)](https://clauswilke.com/dataviz/telling-a-story.html) by Wilke
 :::
 
-{{< include activity-instructions.qmd >}}
 
 ## Warm-up
 
