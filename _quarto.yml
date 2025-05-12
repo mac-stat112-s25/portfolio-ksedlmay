@@ -13,7 +13,7 @@ book:
   
   
   sidebar:
-    title: "Your Name Here"
+    title: "Kellen Sedlmayer"
     collapse-level: 2
     style: "docked"
     pinned: true
@@ -25,22 +25,22 @@ book:
 
     - part: "Best Work"
       chapters: 
-      - ica/BestWork.qmd
-      - ica/Test1.qmd
-      - ica/Test2.qmd
+      - Home/GitHub/portfolio-ksedlmay/ica/BestWork.qmd
+      - Home/GitHub/portfolio-ksedlmay/ica/Test1.qmd
+      - Home/GitHub/portfolio-ksedlmay/ica/Test2.qmd
 
     - part: "In-class Activities"
       chapters: 
-      - ica/ica-uni.qmd
-      - ica/ica-bi.qmd
-      - ica/ica-multi.qmd
-      - ica/ica-spatial.qmd
-      - ica/Joining.qmd
-      - ica/Reshaping.qmd
-      - ica/Strings.qmd
-      - ica/Wrangling.qmd
-      - ica/Dates.qmd
-      - ica/Factors.qmd
+      - Home/GitHub/portfolio-ksedlmay/ica/ica-uni.qmd
+      - Home/GitHub/portfolio-ksedlmay/ica/ica-bi.qmd
+      - Home/GitHub/portfolio-ksedlmay/ica/ica-multi.qmd
+      - Home/GitHub/portfolio-ksedlmay/ica/ica-spatial.qmd
+      - Home/GitHub/portfolio-ksedlmay/ica/Joining.qmd
+      - Home/GitHub/portfolio-ksedlmay/ica/Reshaping.qmd
+      - Home/GitHub/portfolio-ksedlmay/ica/Strings.qmd
+      - Home/GitHub/portfolio-ksedlmay/ica/Wrangling.qmd
+      - Home/GitHub/portfolio-ksedlmay/ica/Dates.qmd
+      - Home/GitHub/portfolio-ksedlmay/ica/Factors.qmd
 
 format:
   html:
