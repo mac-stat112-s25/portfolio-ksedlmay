@@ -548,34 +548,12 @@ ggplot(births_monthly, aes(x = month, y = total_births, group = year)) +
   geom_line(alpha = 0.5) 
 ```
 
-#### Part b {.unnumbered}
 
-In 1988, calculate the total number of births per week in each state. Get rid of week "53", which isn't a complete week! Then, make a line plot of births by week for each state and comment on what you learn. For example, do you notice any seasonal trends? Are these the same in every state? Any outliers?
 
-```{r}
-births_weekly <- Birthdays |> 
-  filter(year == 1988, week != 53) |> 
-  group_by(state, week) |> 
-  summarise(total_births = sum(births), .groups = "drop")
-
-ggplot(births_weekly, aes(x = week, y = total_births, color = state)) +
-  geom_line(show.legend = FALSE) +
-  facet_wrap(~state)
-```
 
 #### Part c {.unnumbered}
 
 Repeat the above for just Minnesota (MN) and Louisiana (LA). MN has one of the coldest climates and LA has one of the warmest. How do their seasonal trends compare? Do you think these trends are similar in other colder and warmer states? Try it!
-
-```{r}
-births_mn_la <- Birthdays |> 
-  filter(year == 1988, week != 53, state %in% c("MN", "LA")) |> 
-  group_by(state, week) |> 
-  summarise(total_births = sum(births), .groups = "drop")
-
-ggplot(births_mn_la, aes(x = week, y = total_births, color = state)) +
-  geom_line()
-```
 
 
 

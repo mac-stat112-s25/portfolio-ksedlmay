@@ -525,36 +525,11 @@ HINTS: There are lots of ways to do this. You don't necessarily need all of thes
 -   Pivot (longer or wider?). When you do, use `values_fill = 0` to replace NA values with 0.
 -   Arrange, then and keep the top 15.
 
-#### Part c {.unnumbered}
 
-Let's recreate the first figure from [the article](https://fivethirtyeight.com/datalab/every-guest-jon-stewart-ever-had-on-the-daily-show/). This groups all guests into 3 broader occupational categories. However, our current data has 18 categories:
 
-```{r}
-plot_data |>
-  group_by(year, broad_group) |>
-  summarise(n = n()) |>
-  mutate(freq = n / sum(n)) |> 
-  ggplot(aes(y = freq, x = year, color = broad_group)) + 
-    geom_line()
-```
 
-Let's define a new dataset that includes a new variable, `broad_group`, that buckets these 18 categories into the 3 bigger ones used in the article. And get rid of any rows missing information on `broad_group`. You'll learn the code soon! For now, just run this chunk:
 
-```{r}
-plot_data <- daily |> 
-  mutate(broad_group = case_when(
-    group %in% c("Acting", "Athletics", "Comedy", "Musician") ~ "Acting, Comedy & Music",
-    group %in% c("Media", "media", "Science", "Academic", "Consultant", "Clergy") ~ "Media",
-    group %in% c("Politician", "Political Aide", "Government", "Military", "Business", "Advocacy") ~ "Government and Politics",
-    .default = NA
-  )) |> 
-  filter(!is.na(broad_group))
-```
 
-Now, using the `broad_group` variable in `plot_data`, recreate the graphic from the article, with three different lines showing the fraction of guests in each group over time. Note: You'll have to wrangle the data first.
-
-```{r}
-```
 
 
 
@@ -857,15 +832,5 @@ daily |>
   head(15)
 ```
 
-#### Part c {.unnumbered}
-
-```{r}
-plot_data |>
-  group_by(year, broad_group) |>
-  summarise(n = n()) |>
-  mutate(freq = n / sum(n)) |> 
-  ggplot(aes(y = freq, x = year, color = broad_group)) + 
-    geom_line()
-```
 
 </details>
